@@ -8,14 +8,16 @@ const program = new Command();
 
 program.version(packageJson.version, '-v, --version');
 
+// const argv = process.argv;
+
 program.command('init [name]')
   .action((name) => {
     console.log(name);
   })
 
 program.command('config')
-  .action(() => {
-
+  .action((...args) => {
+    console.log(args);
   });
 
 program.command('task')
