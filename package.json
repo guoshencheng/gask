@@ -1,0 +1,12 @@
+{
+  "name": "gask",
+  "version": "1.0.0",
+  "description": "a distributed task system",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "zhemu@maihaoche.com",
+  "license": "MIT"
+}
