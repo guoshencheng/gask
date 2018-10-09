@@ -5,6 +5,7 @@ import * as mkdirp from 'mkdirp';
 
 const $root = join(homedir(), '.gask');
 const $configFile = join($root, 'config.json')
+const $workspaces = join($root, 'workspaces');
 
 export const read = ($path: string): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -87,9 +88,12 @@ const _checkFile = async ($path: string) => {
   }
 }
 
-export const checkFile = ($path: string) => (tar: Object, key: string, descriptor: TypedPropertyDescriptor<any>): any => ({
+export const checkFile = ($path: string | ((name: string) => string)) => (tar: Object, key: string, descriptor: TypedPropertyDescriptor<any>): any => ({
   ...descriptor,
   async value(...rest: any[]) {
+    if (typeof $path === 'function') {
+      $path = $path.call(tar, ...rest) as string;
+    }
     const dirPath = dirname($path);
     await _checkDir(dirPath);
     await _checkFile($path);
@@ -108,13 +112,18 @@ const _checkDir = async (dir: string) => {
   }
 }
 
-export const checkDir = (dir: string) => (tar: Object, key: string, descriptor: TypedPropertyDescriptor<any>): any => ({
+export const checkDir = (dir: string | ((name: string) => string)) => (tar: Object, key: string, descriptor: TypedPropertyDescriptor<any>): any => ({
   ...descriptor,
   async value(...rest: any[]) {
+    if (typeof dir === 'function') {
+      dir = dir.call(tar, ...rest) as string;
+    }
     await _checkDir(dir);
     return descriptor.value.call(tar, ...rest);
   }
 })
+
+const workspaceFile = (wname: string): string => join($workspaces, wname);
 
 class FileManager {
   @checkDir($root)
@@ -132,6 +141,23 @@ class FileManager {
     } catch (_) {
       return {};
     }
+  }
+
+  @checkFile(workspaceFile)
+  async readWorkspace(wname: string) {
+    const $workspaceFile = workspaceFile(wname);
+    const workspace = await read($workspaceFile);
+    try {
+      return JSON.parse(workspace);
+    } catch (_) {
+      return {};
+    }
+  }
+
+  @checkFile(workspaceFile)
+  async writeWorkspace(wname: string, data: any) {
+    const $workspaceFile = workspaceFile(wname);
+    return write($workspaceFile, JSON.stringify(data, null, 2));
   }
 }
 
