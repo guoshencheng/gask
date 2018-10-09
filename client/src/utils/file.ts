@@ -1,5 +1,5 @@
 import { lstat, Stats, readFile, writeFile } from 'fs';
-import { join } from 'path'
+import { join, dirname } from 'path'
 import { homedir } from 'os';
 import * as mkdirp from 'mkdirp';
 
@@ -25,7 +25,7 @@ export const read = ($path: string): Promise<string> => {
 export const write = ($path: string, content: string): Promise<string> => {
   return new Promise((resolve, reject) => {
     try {
-      writeFile($path, content, {
+      writeFile($path, `${content}\n`, {
         encoding: 'utf8',
       }, (err: NodeJS.ErrnoException) => {
         if (err) {
@@ -72,32 +72,66 @@ export const mkdir = ($path: string) => {
   })
 }
 
+const _createEmptyFile = async ($path: string) => {
+  return write($path, '');
+}
+
+const _checkFile = async ($path: string) => {
+  try {
+    const stats = await lstats($path);
+    if (!stats.isFile) {
+      _createEmptyFile($path);
+    }
+  } catch (e) {
+    _createEmptyFile($path);
+  }
+}
+
+export const checkFile = ($path: string) => (tar: Object, key: string, descriptor: TypedPropertyDescriptor<any>): any => ({
+  ...descriptor,
+  async value(...rest: any[]) {
+    const dirPath = dirname($path);
+    await _checkDir(dirPath);
+    await _checkFile($path);
+    return descriptor.value.call(tar, ...rest);
+  }
+})
+
+const _checkDir = async (dir: string) => {
+  try {
+    const stats = await lstats(dir);
+    if (!stats.isDirectory) {
+      mkdir(dir);
+    }
+  } catch (e) {
+    mkdir(dir);
+  }
+}
+
 export const checkDir = (dir: string) => (tar: Object, key: string, descriptor: TypedPropertyDescriptor<any>): any => ({
   ...descriptor,
   async value(...rest: any[]) {
-    try {
-      const stats = await lstats(dir);
-      if (!stats.isDirectory) {
-        mkdir(dir);
-      }
-    } catch (e) {
-      mkdir(dir);
-    } finally {
-      return descriptor.value.call(tar, ...rest);
-    }
+    await _checkDir(dir);
+    return descriptor.value.call(tar, ...rest);
   }
 })
 
 class FileManager {
   @checkDir($root)
+  @checkFile($configFile)
   writeConfigFile(data: any): Promise<string> {
-    return write($configFile, JSON.stringify(data));
+    return write($configFile, JSON.stringify(data, null, 2));
   }
 
   @checkDir($root)
+  @checkFile($configFile)
   async readConfigFile(): Promise<any> {
     const configString = await read($configFile);
-    return JSON.parse(configString);
+    try {
+      return JSON.parse(configString);
+    } catch (_) {
+      return {};
+    }
   }
 }
 

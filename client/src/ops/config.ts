@@ -7,7 +7,11 @@ export const set = async (key: string, value: string): Promise<any> => {
   return config;
 }
 
-export const get = async (key: string): Promise<string> => {
+export const get = async (key?: string): Promise<string | any> => {
   const config = await file.readConfigFile();
-  return config[key];
+  if (key) {
+    return config[key];
+  } else {
+    return config;
+  }
 }
