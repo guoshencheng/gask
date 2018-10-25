@@ -1,9 +1,7 @@
 import { lstat, Stats, readFile, writeFile, readdir } from 'fs';
-import { generate } from 'shortid'
 import { join, dirname } from 'path'
 import { homedir } from 'os';
 import * as mkdirp from 'mkdirp';
-import { current } from './date';
 
 const $root = join(homedir(), '.gask');
 const $configFile = join($root, 'config.json')
@@ -146,12 +144,14 @@ export const checkDir = (dir: string | ((name: string) => string)) => (tar: Obje
 const workspaceFile = (wname: string): string => join($workspaces, wname);
 
 class FileManager {
+  // 写入总配置文件
   @checkDir($root)
   @checkFile($configFile)
   writeConfigFile(data: any): Promise<string> {
     return write($configFile, JSON.stringify(data, null, 2));
   }
 
+  // 读取总配置文件
   @checkDir($root)
   @checkFile($configFile)
   async readConfigFile(): Promise<any> {
@@ -163,39 +163,31 @@ class FileManager {
     }
   }
 
-  @checkDir($workspaces)
-  async readWorkspace(wname: string) {
-    const $workspaceFile = workspaceFile(wname);
-    const workspace = await read($workspaceFile);
-    try {
-      return JSON.parse(workspace);
-    } catch (_) {
-      return {};
-    }
+  // 写入 workspace 文件
+  @checkFile(workspaceFile)
+  async writeWorkspace(name: string, value: any): Promise<string> {
+    const result = await write(join($workspaces, name), JSON.stringify(value));
+    return result;
   }
 
-  @checkDir($workspaces)
-  async createWorkspace(wname: string) {
-    const list = await this.listWorkSpace();
-    const hash = generate();
-    const next = list.concat({
-      hash,
-      name: wname,
-      createdAt: current(),
-      updatedAt: current(),
-    })
-    const $workspaceFile = workspaceFile(hash);
-    await write($workspaceFile, JSON.stringify({}, null, 2));
-    await this.writeWorkSpaceJson(next);
+  // 读取 workspace 文件
+  @checkFile(workspaceFile)
+  async readWorkspace(name: string): Promise<any> {
+    const result = await read(join($workspaces, name));
+    const workspace = JSON.parse(result) as any[];
+    return workspace;
   }
 
+  // 写入workspace json
+  @checkFile($workspacesJson)
   async writeWorkSpaceJson(value: any[]): Promise<string> {
     const result = await write($workspacesJson, JSON.stringify(value));
     return result;
   }
 
-  @checkFile($workspacesJson, [])
-  async listWorkSpace(): Promise<any[]> {
+  // 读取workspace json
+  @checkFile($workspacesJson)
+  async readWorkSpaceJson(): Promise<any[]> {
     const workspacesString = await read($workspacesJson);
     const workspaces = JSON.parse(workspacesString) as any[];
     return workspaces;

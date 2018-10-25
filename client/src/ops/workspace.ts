@@ -1,7 +1,9 @@
 import fm from '../utils/file';
+import { generate } from 'shortid'
+import { current } from '../utils/date';
 
 export const list = async () => {
-  const workspaces = await fm.listWorkSpace();
+  const workspaces = await fm.readWorkSpaceJson();
   if (workspaces && workspaces.length > 0) {
     workspaces.forEach(workspace => {
       console.log(workspace);
@@ -13,7 +15,18 @@ export const list = async () => {
 
 // 创建workspace
 export const create = async (wname: string) => {
-  await fm.createWorkspace(wname);
+  const workspaces = await fm.readWorkSpaceJson();
+  const hash = generate();
+  const next = workspaces.concat({
+    members: [],
+    lists: [],
+    hash,
+    name: wname,
+    createdAt: current(),
+    updatedAt: current(),
+  })
+  await fm.writeWorkSpaceJson(next);
+  await fm.writeWorkspace(wname, {});
 }
 
 // 完成workspace
