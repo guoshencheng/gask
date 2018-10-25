@@ -1,10 +1,13 @@
-import { lstat, Stats, readFile, writeFile } from 'fs';
+import { lstat, Stats, readFile, writeFile, readdir } from 'fs';
+import { generate } from 'shortid'
 import { join, dirname } from 'path'
 import { homedir } from 'os';
 import * as mkdirp from 'mkdirp';
+import { current } from './date';
 
 const $root = join(homedir(), '.gask');
 const $configFile = join($root, 'config.json')
+const $workspacesJson = join($root, 'workspaces.json');
 const $workspaces = join($root, 'workspaces');
 
 export const read = ($path: string): Promise<string> => {
@@ -73,30 +76,47 @@ export const mkdir = ($path: string) => {
   })
 }
 
-const _createEmptyFile = async ($path: string) => {
-  return write($path, '');
+export const _readdir = (dir: string, options: string | any): Promise<string[]> => {
+  return new Promise((resolve, reject) => {
+    try {
+      readdir(dir, options, (err: NodeJS.ErrnoException, files) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(files);
+        }
+      })
+    } catch (error) {
+      reject(error);
+    }
+  })
 }
 
-const _checkFile = async ($path: string) => {
+const _createEmptyFile = async ($path: string, defaultValue: any) => {
+  return write($path, !!defaultValue ? JSON.stringify(defaultValue) : '');
+}
+
+const _checkFile = async ($path: string, defaultValue: any) => {
   try {
     const stats = await lstats($path);
     if (!stats.isFile) {
-      _createEmptyFile($path);
+      _createEmptyFile($path, defaultValue);
     }
   } catch (e) {
-    _createEmptyFile($path);
+    _createEmptyFile($path, defaultValue);
   }
 }
 
-export const checkFile = ($path: string | ((name: string) => string)) => (tar: Object, key: string, descriptor: TypedPropertyDescriptor<any>): any => ({
+export const checkFile = ($path: string | ((name: string) => string), defaultValue?: any) => (tar: Object, key: string, descriptor: TypedPropertyDescriptor<any>): any => ({
   ...descriptor,
   async value(...rest: any[]) {
+    defaultValue = defaultValue || '';
     if (typeof $path === 'function') {
       $path = $path.call(tar, ...rest) as string;
     }
     const dirPath = dirname($path);
     await _checkDir(dirPath);
-    await _checkFile($path);
+    await _checkFile($path, defaultValue);
     return descriptor.value.call(tar, ...rest);
   }
 })
@@ -105,10 +125,10 @@ const _checkDir = async (dir: string) => {
   try {
     const stats = await lstats(dir);
     if (!stats.isDirectory) {
-      mkdir(dir);
+      await mkdir(dir);
     }
   } catch (e) {
-    mkdir(dir);
+    await mkdir(dir);
   }
 }
 
@@ -143,7 +163,7 @@ class FileManager {
     }
   }
 
-  @checkFile(workspaceFile)
+  @checkDir($workspaces)
   async readWorkspace(wname: string) {
     const $workspaceFile = workspaceFile(wname);
     const workspace = await read($workspaceFile);
@@ -154,10 +174,31 @@ class FileManager {
     }
   }
 
-  @checkFile(workspaceFile)
-  async writeWorkspace(wname: string, data: any) {
-    const $workspaceFile = workspaceFile(wname);
-    return write($workspaceFile, JSON.stringify(data, null, 2));
+  @checkDir($workspaces)
+  async createWorkspace(wname: string) {
+    const list = await this.listWorkSpace();
+    const hash = generate();
+    const next = list.concat({
+      hash,
+      name: wname,
+      createdAt: current(),
+      updatedAt: current(),
+    })
+    const $workspaceFile = workspaceFile(hash);
+    await write($workspaceFile, JSON.stringify({}, null, 2));
+    await this.writeWorkSpaceJson(next);
+  }
+
+  async writeWorkSpaceJson(value: any[]): Promise<string> {
+    const result = await write($workspacesJson, JSON.stringify(value));
+    return result;
+  }
+
+  @checkFile($workspacesJson, [])
+  async listWorkSpace(): Promise<any[]> {
+    const workspacesString = await read($workspacesJson);
+    const workspaces = JSON.parse(workspacesString) as any[];
+    return workspaces;
   }
 }
 

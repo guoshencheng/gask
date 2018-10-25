@@ -1,12 +1,19 @@
 import fm from '../utils/file';
 
 export const list = async () => {
-  // await fm.readWorkspace()
+  const workspaces = await fm.listWorkSpace();
+  if (workspaces && workspaces.length > 0) {
+    workspaces.forEach(workspace => {
+      console.log(workspace);
+    });
+  } else {
+    console.log('no workspace, please create')
+  }
 }
 
 // 创建workspace
 export const create = async (wname: string) => {
-  await fm.writeWorkspace(wname, {});
+  await fm.createWorkspace(wname);
 }
 
 // 完成workspace
