@@ -1,10 +1,16 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander';
+import { create } from './ops/users';
 
 const packageJson = require('../package.json');
 
 const program = new Command();
+
+create({
+  username: 'guoshencheng',
+  email: 'guoshencheng1@gmail.com'
+})
 
 program.version(packageJson.version, '-v, --version');
 

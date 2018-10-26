@@ -1,12 +1,16 @@
-import fm from '../utils/file';
-import { generate } from 'shortid'
-import { current } from '../utils/date';
+import { Model, ModelT } from '../utils/file';
+
+export class WorkSpaceT extends ModelT {
+  name: string;
+}
+
+const WorkSpace = new Model<WorkSpaceT>('workspaces');
 
 export const list = async () => {
-  const workspaces = await fm.readWorkSpaceJson();
+  const workspaces = await WorkSpace.findAll()
   if (workspaces && workspaces.length > 0) {
     workspaces.forEach(workspace => {
-      console.log(workspace);
+      console.log(workspace.name);
     });
   } else {
     console.log('no workspace, please create')
@@ -15,18 +19,10 @@ export const list = async () => {
 
 // 创建workspace
 export const create = async (wname: string) => {
-  const workspaces = await fm.readWorkSpaceJson();
-  const hash = generate();
-  const next = workspaces.concat({
-    members: [],
-    lists: [],
-    hash,
-    name: wname,
-    createdAt: current(),
-    updatedAt: current(),
-  })
-  await fm.writeWorkSpaceJson(next);
-  await fm.writeWorkspace(wname, {});
+  const workspace = await WorkSpace.create({
+    name: wname
+  });
+  return workspace;
 }
 
 // 完成workspace
