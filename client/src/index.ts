@@ -2,6 +2,7 @@
 
 import { Command } from 'commander';
 import { create as createAccount, info as accountInfo } from './ops/account';
+import { create as createWorkspace, list as listWorkspace } from './ops/workspace';
 
 const packageJson = require('../package.json');
 
@@ -38,6 +39,15 @@ registerCommandWithSub('account', {
   }),
 });
 
+registerCommandWithSub('workspace', {
+  'create [name]': cmd => cmd.action((name) => {
+    createWorkspace(name);
+  }),
+  'list': cmd => cmd.action(() => {
+    listWorkspace();
+  })
+})
+
 program.command('init [name]')
   .action((name) => {
     console.log(name);
@@ -54,11 +64,6 @@ program.command('task')
 })
 
 program.command('tg')
-  .action(() => {
-
-})
-
-program.command('workspace')
   .action(() => {
 
 })
