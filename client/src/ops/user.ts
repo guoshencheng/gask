@@ -37,3 +37,8 @@ export const users = async () => {
     console.log('no user, please create')
   }
 }
+
+export const userByHash = async (hash: string) => {
+  const user = await User.findByHash(hash);
+  return user;
+}

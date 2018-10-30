@@ -9,3 +9,11 @@ export const account = (): Promise<{ username: string, email: string }> => {
     message: 'Enter your email?',
   }])
 }
+
+export const ifContinue = (): Promise<{ continue: boolean }> => {
+  return inquirer.prompt({
+    type: 'confirm',
+    name: 'continue',
+    message: 'Do you want continue'
+  })
+}
