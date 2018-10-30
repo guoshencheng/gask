@@ -26,7 +26,7 @@ export const workspaces = (ws?: WorkSpaceT[]) => {
   if (ws && ws.length > 0) {
     console.log(chalk.green('Workspace list: '))
     ws.forEach((w, index) => {
-      console.log(`${index + 1}. name: ${w.name}  hash: ${w.hash}`);
+      console.log(`${index + 1}. ${w.name}`);
     });
   } else {
     console.log('no workspace, please create')
