@@ -1,4 +1,4 @@
-import { account, ifContinue } from '../utils/ask';
+import { account, ifContinue, suggestToCreateAccount } from '../utils/ask';
 import { set, get } from './config';
 import { user as renderUser, userExist as renderenderUserExist } from '../utils/render';
 import { create as createUser, userByHash } from './user';
@@ -19,4 +19,19 @@ export const create = async () => {
   })
   set('account', result.hash || '');
   renderUser(result);
+}
+
+export const info = async () => {
+  let userHash = await get('account');
+  if (userHash) {
+    const user = await userByHash(userHash);
+    if (user) {
+      renderUser(user)
+    } else {
+      const { create: $create } = await suggestToCreateAccount();
+      if ($create) {
+        create();
+      }
+    }
+  }
 }

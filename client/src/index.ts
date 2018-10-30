@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander';
-import { create as createAccount } from './ops/account';
+import { create as createAccount, info as accountInfo } from './ops/account';
 
 const packageJson = require('../package.json');
 
@@ -34,7 +34,7 @@ registerCommandWithSub('account', {
     createAccount();
   }),
   info: cmd => cmd.action(() => {
-    console.log('account info');
+    accountInfo();
   }),
 });
 

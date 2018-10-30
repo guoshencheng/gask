@@ -14,6 +14,14 @@ export const ifContinue = (): Promise<{ continue: boolean }> => {
   return inquirer.prompt({
     type: 'confirm',
     name: 'continue',
-    message: 'Do you want continue'
+    message: 'Do you want continue?'
+  })
+}
+
+export const suggestToCreateAccount = (): Promise<{ create: boolean }> => {
+  return inquirer.prompt({
+    type: 'confirm',
+    name: 'create',
+    message: 'No account, Do you want create one?'
   })
 }
