@@ -1,6 +1,7 @@
 import { UserT } from '../ops/user';
 import { WorkSpaceT } from '../ops/workspace';
 import chalk from 'chalk'
+import { TopicT } from '../ops/topic';
 
 export const user = (u: UserT) => {
   console.log(`username: ${u.username}`);
@@ -15,11 +16,13 @@ export const userExist = (u: UserT) => {
   console.log(`hash: ${u.hash}`);
 }
 
-export const workspace = (w: WorkSpaceT, owner: UserT) => {
+export const workspace = (w: WorkSpaceT, owner?: UserT) => {
   console.log(chalk.green('Workspace: '))
   console.log(`  workspace name: ${w.name}`);
   console.log(`  hash: ${w.hash}`);
-  console.log(`  owner: ${owner.username}`);
+  if (owner) {
+    console.log(`  owner: ${owner.username}`);
+  }
 }
 
 export const workspaces = (ws?: WorkSpaceT[]) => {
@@ -30,5 +33,14 @@ export const workspaces = (ws?: WorkSpaceT[]) => {
     });
   } else {
     console.log('no workspace, please create')
+  }
+}
+
+export const topic = (t: TopicT, w?: WorkSpaceT) => {
+  console.log(chalk.green('Topic: '));
+  console.log(` title: ${t.title}`);
+  if (w) {
+    console.log('所属workspace: ')
+    workspace(w);
   }
 }

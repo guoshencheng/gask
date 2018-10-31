@@ -112,10 +112,10 @@ const _checkFile = async ($path: string, defaultValue: any) => {
   try {
     const stats = await lstats($path);
     if (!stats.isFile) {
-      _createEmptyFile($path, defaultValue);
+      await _createEmptyFile($path, defaultValue);
     }
   } catch (e) {
-    _createEmptyFile($path, defaultValue);
+    await _createEmptyFile($path, defaultValue);
   }
 }
 
@@ -125,10 +125,11 @@ export const checkFile = ($path: FilePath, defaultValue?: any) => (tar: Object, 
   ...descriptor,
   async value(...rest: any[]) {
     defaultValue = defaultValue || '';
+    let p = $path;
     if (typeof $path === 'function') {
-      $path = $path.call(tar, ...rest) as string;
+      p = $path.call(tar, ...rest) as string;
     }
-    await _checkFile($path, defaultValue);
+    await _checkFile(p as string, defaultValue);
     return descriptor.value.call(tar, ...rest);
   }
 })
@@ -235,6 +236,7 @@ class FileManager {
       const filepath = join($root, modelName, hash);
       await _checkFile(filepath, {});
       const value = await read(filepath)
+      console.log(value);
       return JSON.parse(value)
     } else {
       throw new Error('hash can\'t be null')

@@ -1,4 +1,17 @@
 import * as inquirer from 'inquirer';
+import { WorkSpaceT } from '../ops/workspace';
+
+export const chooseWorkspace = (workspaces: WorkSpaceT[]): Promise<{ workspace: WorkSpaceT }> => {
+  return inquirer.prompt({
+    type: 'list',
+    name: 'workspace',
+    message: 'Choose a workspace',
+    choices: workspaces.map(i => ({
+      name: i.name,
+      value: i,
+    }))
+  })
+}
 
 export const account = (): Promise<{ username: string, email: string }> => {
   return inquirer.prompt([{

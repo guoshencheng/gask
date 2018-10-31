@@ -3,6 +3,7 @@
 import { Command } from 'commander';
 import { create as createAccount, info as accountInfo } from './ops/account';
 import { create as createWorkspace, list as listWorkspace } from './ops/workspace';
+import { create as createTopic } from './ops/topic';
 
 const packageJson = require('../package.json');
 
@@ -48,6 +49,12 @@ registerCommandWithSub('workspace', {
   })
 })
 
+registerCommandWithSub('topic', {
+  'create [title]': cmd => cmd.action(title => {
+    createTopic({ title });
+  })
+})
+
 program.command('init [name]')
   .action((name) => {
     console.log(name);
@@ -59,11 +66,6 @@ program.command('config')
   });
 
 program.command('task')
-  .action(() => {
-
-})
-
-program.command('tg')
   .action(() => {
 
 })
