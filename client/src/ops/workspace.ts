@@ -2,6 +2,7 @@ import { Model, ModelT } from '../utils/file';
 import { suggestToCreateAccount, chooseWorkspace } from '../utils/ask'
 import { getAccount, create as createAccount } from './account';
 import { workspace as renderWorkspace, workspaces as renderWorkspaces } from '../utils/render';
+import { set } from './config';
 
 export class WorkSpaceT extends ModelT {
   name: string;
@@ -10,6 +11,12 @@ export class WorkSpaceT extends ModelT {
 }
 
 const WorkSpace = new Model<WorkSpaceT>('workspaces');
+
+export const checkout = async () => {
+  const workspace = await choose();
+  await set('workspace', workspace.hash as string);
+  console.log(`current workspace ${workspace.name}`);
+}
 
 export const save = async (workspace: WorkSpaceT) => {
   return WorkSpace.save(workspace);

@@ -236,7 +236,6 @@ class FileManager {
       const filepath = join($root, modelName, hash);
       await _checkFile(filepath, {});
       const value = await read(filepath)
-      console.log(value);
       return JSON.parse(value)
     } else {
       throw new Error('hash can\'t be null')
