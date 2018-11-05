@@ -4,8 +4,9 @@ export const commonBox = {
       type: 'line'
     },
     style: {
+      bg: 'magenta',
       border: {
-        fg: 'blue'
+        fg: 'white'
       }
     }
   }

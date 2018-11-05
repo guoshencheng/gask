@@ -1,7 +1,9 @@
 import * as React from 'react';
 import * as blessed from 'blessed';
 import { render } from 'react-blessed';
+import { Provider } from 'react-redux'
 
+import store from './model';
 import WorkSpaces from './workspaces';
 import WorkSpace from './workspace';
 import AccountInfo from './account';
@@ -28,6 +30,7 @@ class App extends Component {
 }
 
 const screen = blessed.screen({
+  fullUnicode: true,
   autoPadding: true,
   smartCSR: true,
   title: 'hello world',
@@ -37,4 +40,8 @@ screen.key(['escape', 'q', 'C-c'], function() {
   return process.exit(0);
 });
 
-render(<App />, screen);
+render(
+  <Provider store={store}>
+    <App />
+  </Provider>
+, screen);
