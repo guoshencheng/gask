@@ -1,5 +1,5 @@
 import * as React from 'react';
-
+import { commonBox } from './style'
 export default class WorkSpace extends React.Component<any, any> {
   constructor(props: any, context: any) {
     super(props, context);
@@ -7,9 +7,10 @@ export default class WorkSpace extends React.Component<any, any> {
   render() {
     return (
       <box
-        border={{type: 'line'}}
+        class={commonBox.bordered}
+        draggable={true}
         label='Workspace Info'
-        left='20%'
+        right='0'
         height='100%'
         width='80%'
       >

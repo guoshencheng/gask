@@ -4,6 +4,7 @@ import { render } from 'react-blessed';
 
 import WorkSpaces from './workspaces';
 import WorkSpace from './workspace';
+import AccountInfo from './account';
 
 const { Component } = React;
 
@@ -11,8 +12,16 @@ class App extends Component {
   render() {
     return (
       <>
-        <WorkSpaces></WorkSpaces>
-        <WorkSpace></WorkSpace>
+        <AccountInfo></AccountInfo>
+        <box
+          left='0'
+          top='10%'
+          width='100%'
+          height='80%'
+        >
+          <WorkSpaces></WorkSpaces>
+          <WorkSpace></WorkSpace>
+        </box>
       </>
     );
   }
