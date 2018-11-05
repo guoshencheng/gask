@@ -1,5 +1,8 @@
 import { Model, ModelT } from '../utils/file';
-import { WorkSpaceT, choose as chooseWorkspace, save as saveWorkspace } from './workspace';
+import {
+  save as saveWorkspace,
+  current as currentWorkspace,
+} from './workspace';
 import { topic as renderTopic } from '../utils/render';
 
 export class TopicT extends ModelT {
@@ -9,11 +12,16 @@ export class TopicT extends ModelT {
 
 const Topic = new Model<TopicT>('topics');
 
-export const create = async ({ title }: TopicT, workspace?: WorkSpaceT) => {
-  if (!workspace) {
-    workspace = await chooseWorkspace();
-  } else {
-  }
+export const list = async () => {
+  const workspace = await currentWorkspace();
+  if (!workspace) return;
+  const hashs = workspace.topics || [];
+  const topics = await Topic.findByHashs(hashs);
+  console.log(topics);
+}
+
+export const create = async ({ title }: TopicT) => {
+  const workspace = await currentWorkspace();
   if (!workspace) return;
   const result = await Topic.create({
     title,

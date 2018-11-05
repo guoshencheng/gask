@@ -2,7 +2,7 @@ import { Model, ModelT } from '../utils/file';
 import { suggestToCreateAccount, chooseWorkspace } from '../utils/ask'
 import { getAccount, create as createAccount } from './account';
 import { workspace as renderWorkspace, workspaces as renderWorkspaces } from '../utils/render';
-import { set } from './config';
+import { set, get } from './config';
 
 export class WorkSpaceT extends ModelT {
   name: string;
@@ -10,11 +10,19 @@ export class WorkSpaceT extends ModelT {
   topics?: string[];
 }
 
+export const CURRENT_WORKSPACE_KEY = 'workspace';
+
 const WorkSpace = new Model<WorkSpaceT>('workspaces');
+
+export const current = async () => {
+  const hash = await get(CURRENT_WORKSPACE_KEY);
+  const workspace = await WorkSpace.findByHash(hash);
+  return workspace;
+}
 
 export const checkout = async () => {
   const workspace = await choose();
-  await set('workspace', workspace.hash as string);
+  await set(CURRENT_WORKSPACE_KEY, workspace.hash as string);
   console.log(`current workspace ${workspace.name}`);
 }
 

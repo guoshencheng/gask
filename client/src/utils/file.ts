@@ -285,6 +285,13 @@ export class Model<T extends ModelT> {
     return model;
   }
 
+  async findByHashs(hashs: string[]): Promise<T[]> {
+    return Promise.all(hashs.map(hash => fm.readModel({
+      modelName: this.name,
+      hash,
+    })))
+  }
+
   async findAll(): Promise<T[]> {
     const modelHashs = await fm.readModelJson(this.name);
     return Promise.all(modelHashs.map(hash => fm.readModel({

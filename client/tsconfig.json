@@ -3,7 +3,7 @@
     "outDir": "./lib",
     "strictNullChecks": true,
     "moduleResolution": "node",
-    "jsx": "preserve",
+    "jsx": "react",
     "noUnusedLocals": true,
     "allowSyntheticDefaultImports":true,
     "experimentalDecorators": true,

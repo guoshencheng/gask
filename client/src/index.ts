@@ -7,7 +7,10 @@ import {
   list as listWorkspace,
   checkout as checkoutWorksapce,
 } from './ops/workspace';
-import { create as createTopic } from './ops/topic';
+import { 
+  create as createTopic,
+  list as listTopic,
+} from './ops/topic';
 
 const packageJson = require('../package.json');
 
@@ -63,7 +66,7 @@ registerCommandWithSub('topic', {
     });
   }),
   'list': cmd => cmd.action(() => {
-
+    listTopic();
   })
 })
 
