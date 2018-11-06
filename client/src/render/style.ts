@@ -11,3 +11,16 @@ export const commonBox = {
     }
   }
 }
+
+export const accountBox = {
+  bordered: {
+    border: {
+      type: 'line'
+    },
+    style: {
+      border: {
+        fg: 'white'
+      }
+    }
+  }
+}

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { StateProps, AccountStateType, actions } from './model'
 
-import { commonBox } from './style'
+import { accountBox } from './style'
 
 class Acccount extends React.Component<{
   account: AccountStateType
@@ -19,18 +19,24 @@ class Acccount extends React.Component<{
     const { account } = this.props;
     return (
       <box
-        class={commonBox.bordered}
+        class={accountBox.bordered}
         label='Account Info'
         height='10%'
         width='100%'
       >
         <box
           top='center'
+          left='1%'
+          align='center'
+          width='25%'
         >
           {`UserName: ${account.username || ''}`}
         </box>
         <box
           top='center'
+          left='27%'
+          align='center'
+          width='25%'
         >
           {`Email: ${account.email || ''}`}
         </box>
