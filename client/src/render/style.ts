@@ -12,6 +12,21 @@ export const commonBox = {
   }
 }
 
+export const table = {
+  style: {
+    header: {
+      fg: 'blue',
+      bold: true
+    },
+    cell: {
+      fg: 'magenta',
+      selected: {
+        bg: 'blue',
+      }
+    }
+  }
+}
+
 export const accountBox = {
   bordered: {
     border: {

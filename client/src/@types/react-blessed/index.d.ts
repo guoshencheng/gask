@@ -9,6 +9,7 @@ declare module 'react-blessed' {
 
 declare namespace JSX {
   interface IntrinsicElements {
-    'box': any
+    'box': any,
+    'listtable': any,
   }
 }

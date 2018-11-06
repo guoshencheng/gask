@@ -20,6 +20,11 @@ export const current = async () => {
   return workspace;
 }
 
+export const all = async () => {
+  const workspaces = await WorkSpace.findAll()
+  return workspaces;
+}
+
 export const checkout = async () => {
   const workspace = await choose();
   await set(CURRENT_WORKSPACE_KEY, workspace.hash as string);
@@ -31,7 +36,7 @@ export const save = async (workspace: WorkSpaceT) => {
 }
 
 export const list = async () => {
-  const workspaces = await WorkSpace.findAll()
+  const workspaces = await all();
   renderWorkspaces(workspaces);
 };
 

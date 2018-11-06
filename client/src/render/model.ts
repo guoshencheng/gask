@@ -8,10 +8,15 @@ import {
 } from 'redux';
 import reduxThunk from 'redux-thunk';
 import { getAccount } from '../ops/account';
+import { all as allWorkspaces } from '../ops/workspace';
 
 export const types = {
   account: {
     SET_ACCOUNT: 'SET_ACCOUNT',
+  },
+  workspaceList: {
+    INIT: 'INIT_WORKSPACE_LIST',
+    SET: 'SET_WORKSPACE_LIST',
   },
   workspace: {
     SWITCH_CURRENT_WORKSPACE: 'SWITCH_CURRENT_WORKSPACE',
@@ -20,6 +25,7 @@ export const types = {
 
 export interface ModelAction extends Action<string> {
   account?: AccountStateType;
+  workspaces: ShortWorkSpaceType[];
   playload?: any;
 };
 
@@ -27,6 +33,50 @@ export type TopicStateType = {
   title: string;
   workspace?: string;
 }
+
+/**
+ * WorkSaceListModel
+ */
+
+export type ShortWorkSpaceType = {
+  name?: string;
+  hash?: string;
+  owner?: string;
+  topics?: string[];
+}
+
+ export type WorkSpaceListStateType = {
+   list: ShortWorkSpaceType[]
+ }
+
+ export class WorkSaceListModel {
+  default: WorkSpaceListStateType = {
+    list: []
+  }
+  reducer = (state: WorkSpaceListStateType, action: ModelAction) => {
+    switch(action.type) {
+      case types.workspaceList.INIT:
+        return { ...state, ...this.default }
+      case types.workspaceList.SET:
+        return { ...state, list: action.workspaces }
+      default:
+        return state || this.default;
+    }
+  }
+  acions = {
+    load: () => async (dispatch: Dispatch) => {
+      const ws = await allWorkspaces()
+      dispatch({
+        type: types.workspaceList.SET,
+        workspaces: ws,
+      })
+    }
+  }
+ }
+
+/**
+ * WorkspaceModel
+ */
 
 export type WorkSpaceStateType = {
   name?: string;
@@ -46,6 +96,10 @@ export class WorkSpaceModel {
   }
 }
 
+
+/**
+ * AccountModel
+ */
 export type AccountStateType = {
   username: string,
   email: string
@@ -87,19 +141,26 @@ export class AccountModel {
   }
 }
 
+/**
+ * sumary
+ */
+
 export type StateProps = {
   account: AccountStateType,
+  workspaces: WorkSpaceListStateType,
 }
 
-
+const workspaces = new WorkSaceListModel();
 const account = new AccountModel();
 
 const store = createStore(combineReducers({
+  workspaces: workspaces.reducer,
   account: account.reducer,
 }), applyMiddleware(reduxThunk))
 
 export const actions = bindActionCreators({
   loadAccount: account.actions.load,
+  loadWorkspaces: workspaces.acions.load,
 }, store.dispatch)
 
 export default store;
