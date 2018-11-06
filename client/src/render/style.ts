@@ -4,7 +4,7 @@ export const commonBox = {
       type: 'line'
     },
     style: {
-      bg: 'magenta',
+      // bg: 'magenta',
       border: {
         fg: 'white'
       }
@@ -22,6 +22,17 @@ export const table = {
       fg: 'magenta',
       selected: {
         bg: 'blue',
+      }
+    }
+  }
+}
+
+export const button = {
+  primary: {
+    style: {
+      bg: 'blue',
+      border: {
+        fg: 'white',
       }
     }
   }

@@ -23,7 +23,7 @@
     "mkdirp": "^0.5.1",
     "moment": "^2.22.2",
     "react": "^16.6.0",
-    "react-blessed": "^0.3.0",
+    "react-blessed2": "^0.3.0-pre",
     "react-redux": "^5.1.0",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",

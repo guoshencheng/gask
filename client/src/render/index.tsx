@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as blessed from 'blessed';
-import { render } from 'react-blessed';
+import { render } from 'react-blessed2';
 import { Provider } from 'react-redux'
 
 import store from './model';
@@ -30,6 +30,7 @@ class App extends Component {
 }
 
 const screen = blessed.screen({
+  debug: true,
   fullUnicode: true,
   autoPadding: true,
   smartCSR: true,
@@ -44,4 +45,15 @@ render(
   <Provider store={store}>
     <App />
   </Provider>
-, screen);
+, screen, {
+  jsxTagMapping: (type: string) => {
+    switch(type) {
+      case 'blessed-button':
+        return 'button';
+      case 'blessed-form':
+        return 'form';
+      default:
+        return type;
+    }
+  }
+});

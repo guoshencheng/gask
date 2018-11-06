@@ -17,6 +17,10 @@ class WorkSpaces extends React.Component<WorkSpacesPropsType, any> {
     actions.loadWorkspaces();
   }
 
+  onPressCreate = () => {
+    console.log(2121);
+  }
+
   render() {
     const { workspaces } = this.props;
     const keys = ['name', 'hash'];
@@ -35,11 +39,21 @@ class WorkSpaces extends React.Component<WorkSpacesPropsType, any> {
           keys={true}
           align='center'
           vi={true}
-          width='100%-2'
-          height='100%-2'
+          width='95%'
+          height='90%'
           data={data}
         >
         </listtable>
+        <blessed-form
+          keys
+          vi
+          focused
+          top='90%'
+          height='8%'
+          width='100%'
+          onSubmit={this.onPressCreate}
+        >
+        </blessed-form>
       </box>
     )
   }
