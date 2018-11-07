@@ -8,7 +8,6 @@ export default class WorkSpace extends React.Component<any, any> {
     return (
       <box
         class={commonBox.bordered}
-        draggable={true}
         label='Workspace Info'
         right='0'
         height='100%'

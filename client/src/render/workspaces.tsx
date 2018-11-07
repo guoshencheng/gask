@@ -27,33 +27,24 @@ class WorkSpaces extends React.Component<WorkSpacesPropsType, any> {
     const data = [keys].concat(workspaces.map(i => keys.map(j => (i as any)[j])))
     return (
       <box
+        scrollable
         class={commonBox.bordered}
-        draggable={true}
-        border={{type: 'line'}}
         label='Workspace List'
         height='100%'
         width='20%'
       >
         <listtable
+          clickable
+          focused
           class={table}
-          keys={true}
+          keys
+          vi
           align='center'
-          vi={true}
           width='95%'
           height='90%'
           data={data}
         >
         </listtable>
-        <blessed-form
-          keys
-          vi
-          focused
-          top='90%'
-          height='8%'
-          width='100%'
-          onSubmit={this.onPressCreate}
-        >
-        </blessed-form>
       </box>
     )
   }

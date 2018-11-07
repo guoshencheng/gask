@@ -1,10 +1,18 @@
 export const commonBox = {
   bordered: {
     border: {
-      type: 'line'
+      type: 'line',
     },
     style: {
-      // bg: 'magenta',
+      hover: {
+        bg: 'magenta',
+      },
+      focus: {
+        border: {
+          fg: 'magenta'
+        },
+        fg: '#56A8F9',
+      },
       border: {
         fg: 'white'
       }
@@ -19,9 +27,12 @@ export const table = {
       bold: true
     },
     cell: {
+      hover: {
+        bg: 'yellow'
+      },
       fg: 'magenta',
       selected: {
-        bg: 'blue',
+        bg: '#56A8F9',
       }
     }
   }
