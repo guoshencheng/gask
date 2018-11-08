@@ -1,8 +1,10 @@
 import * as blessed from 'blessed';
 import screen from './screen';
 import Account from './account';
+import WorkSpaces from './workspaces';
 
-const layout = blessed.box({
+const layout = blessed.layout({
+  layout: 'inline',
   parent: screen,
   top: 0,
   right: 0,
@@ -14,8 +16,12 @@ const layout = blessed.box({
   }
 });
 
-screen.render();
+layout.renderer = function(coods: blessed.Widgets.Coords) {
+
+}
+
 
 new Account(layout);
+new WorkSpaces(layout);
 
 screen.render();
