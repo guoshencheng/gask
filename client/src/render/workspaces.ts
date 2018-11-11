@@ -9,6 +9,7 @@ export default class WorkSpaceList {
   constructor(parent: blessed.Widgets.BlessedElement) {
     this.parent = parent;
     this.container = blessed.box({
+      width: '20%',
       parent,
     })
     this.list = blessed.list({

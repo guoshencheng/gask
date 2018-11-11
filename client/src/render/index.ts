@@ -17,7 +17,24 @@ const layout = blessed.layout({
 });
 
 layout.renderer = function(coods: blessed.Widgets.Coords) {
-
+  const self = this as blessed.Widgets.LayoutElement;
+  const layoutWidth = coods.xl - coods.xi;
+  return (el: blessed.Widgets.BoxElement, index: number ) => {
+    const last = self.getLastCoords(index);
+    const width = Number(el.width);
+    if (!last) {
+      el.position.top = 0;
+      el.position.left = 0;
+    } else {
+      if (width + last.yl > layoutWidth) {
+        el.position.top = last.yi;
+        el.position.left = last.xl;
+      } else {
+        el.position.top = last.yl;
+        el.position.left = 0;
+      }
+    }
+  }
 }
 
 
