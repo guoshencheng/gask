@@ -1,28 +1,37 @@
 import * as blessed from 'blessed';
-import { ColdSupport } from './colors';
-
+import { WarmPrimary } from './colors';
 
 export default class WorkSpaceList {
   parent: blessed.Widgets.BlessedElement
-  container: blessed.Widgets.BoxElement
-  list: blessed.Widgets.ListElement
+  container: blessed.Widgets.LayoutElement
+  blocks: blessed.Widgets.BoxElement[]
+  items: string[]
+  selected: number;
   constructor(parent: blessed.Widgets.BlessedElement) {
     this.parent = parent;
-    this.container = blessed.box({
+    this.selected = 0;
+    this.container = blessed.layout({
+      height: '100%',
+      layout: 'inline',
       width: '20%',
       parent,
     })
-    this.list = blessed.list({
-      style: {
-        item: {
-          bg: ColdSupport,
-        }
-      },
-      items: [
-        '112121',
-        '21212',
-      ]
+    this.items = ['1111', '33333']
+    this.blocks = this.items.map((item, index) => {
+      return blessed.box({
+        style: {
+          bg: this.selected === index ? WarmPrimary : ''
+        },
+        padding: {
+          top: 1,
+          bottom: 1,
+        },
+        shrink: true,
+        height: 'shrink',
+        width: '100%',
+        parent: this.container,
+        content: item
+      })
     })
-    this.container.append(this.list);
   }
 }
