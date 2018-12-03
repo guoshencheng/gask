@@ -1,6 +1,5 @@
 import * as blessed from 'blessed';
 import { UserT } from '../ops/user';
-import { topic } from '../utils/render';
 
 const user = {
   username: 'user',
@@ -9,16 +8,13 @@ const user = {
 
 const data: WorkSpaceDO = {
   title: '12121',
-  topics: [{
-    title: 'test1',
-    tasks: [{
-      title: 'title1',
-      description: 'desc1',
-      creator: user,
-      assign: user,
-      status: 1
-    }]
-  }]
+  tasks: [{
+    title: 'title1',
+    description: 'desc1',
+    creator: user,
+    assign: user,
+    status: 1
+  }],
 }
 
 export class TaskDO {
@@ -28,15 +24,9 @@ export class TaskDO {
   assign: UserT
   status: number
 }
-
-export class TopicDO {
-  title: string;
-  tasks: TaskDO[];
-}
-
 export class WorkSpaceDO {
   title: string;
-  topics: TopicDO[]
+  tasks: TaskDO[]
 }
 
 export default class WorkSpace {
