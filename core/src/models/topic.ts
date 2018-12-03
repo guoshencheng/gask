@@ -1,7 +1,8 @@
 import { ModelOp } from './helpers'
 
 export class TopicModel {
-  id?: string;
+  workspaceId?: string;
+  id: string;
   title?: string;
   description?: string;
 }

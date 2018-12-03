@@ -1,6 +1,6 @@
 export interface PageOptions {
-  pageSize: number;
-  pageNo: number;
+  pageSize?: number;
+  pageNo?: number;
   where?: any
 }
 
