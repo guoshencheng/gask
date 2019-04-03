@@ -1,5 +1,5 @@
 {
-  "name": "gask-core",
+  "name": "gask",
   "version": "1.0.0",
   "description": "the core o gask",
   "main": "lib/index.js",
@@ -22,12 +22,12 @@
   "devDependencies": {
     "@types/blessed": "^0.1.10",
     "@types/commander": "^2.12.2",
-    "@types/shortid": "^0.0.29",
     "@types/inquirer": "^0.0.43",
     "@types/jest": "^23.3.4",
     "@types/mkdirp": "^0.5.2",
     "@types/moment": "^2.13.0",
-    "@types/node": "^10.11.4",
+    "@types/node": "^11.13.0",
+    "@types/shortid": "^0.0.29",
     "jest": "^23.6.0",
     "ts-jest": "^23.10.4",
     "tslint": "^5.11.0",
