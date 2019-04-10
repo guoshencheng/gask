@@ -11,6 +11,8 @@ import { sep, parse } from 'path';
 import { statSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
 import { generate } from 'shortid'
 
+import Condition, { ConditionDescObj } from './condition'
+
 const PREFIX_DIR = `${homedir()}${sep}.gask`
 const STORATGE_DIR = `${PREFIX_DIR}${sep}storage`
 
@@ -50,12 +52,22 @@ export const create = (name: string, obj: any) => {
   }))
 }
 
-export const query = (name: string, condition: any) => {
+export const query = (name: string, condition: ConditionDescObj | Condition) => {
   const file = storageFile(name)
   checkAndFillPath(file)
+  const contents = readStorageFile(file)
+  if (condition instanceof Condition) {
+    return contents.filter(condition.filter)
+  } else {
+    return contents.filter(new Condition(condition).filter)
+  }
 }
 
-export const update = (name: string, condition: any, patch: any) => {
+export const update = (name: string, condition: ConditionDescObj | Condition, patch: any) => {
   const file = storageFile(name)
   checkAndFillPath(file)
+  const contents = readStorageFile(file)
+  const con = (condition instanceof Condition) ? condition : new Condition(condition)
+  const next = contents.map((item, index) => con.filter(item, index) ? ({ ...item, ...patch }) : item)
+  return next
 }

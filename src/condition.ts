@@ -14,15 +14,27 @@ export const Op = {
 
 export type CompareBaseType = string | number | undefined | null
 
+export type ConditionBaseDesc = {
+  [gt]?: CompareBaseType,
+  [lt]?: CompareBaseType,
+  [gte]?: CompareBaseType,
+  [lte]?: CompareBaseType,
+  [like]?: CompareBaseType,
+  [ne]?: CompareBaseType,
+  [eq]?: CompareBaseType,
+}
 
-// object => condition
-// { a: 13 } =>
-/**
- * A.And().Or()
- */
+export type ConditionDescObj = {
+  [key: string]: Condition | CompareBaseType | ConditionBaseDesc,
+}
+
+export type ConditionItem = {
+  op: 'AND' | 'OR' | 'INIT',
+  condition: ConditionDescObj | Condition,
+}
 
 
-export class Condition {
+export default class Condition {
 
   conditions: ConditionItem[]
 
@@ -112,26 +124,3 @@ export class Condition {
   }
 }
 
-export type ConditionBaseDesc = {
-  [gt]?: CompareBaseType,
-  [lt]?: CompareBaseType,
-  [gte]?: CompareBaseType,
-  [lte]?: CompareBaseType,
-  [like]?: CompareBaseType,
-  [ne]?: CompareBaseType,
-  [eq]?: CompareBaseType,
-}
-
-export type ConditionDescObj = {
-  [key: string]: Condition | CompareBaseType | ConditionBaseDesc,
-}
-
-export type ConditionItem = {
-  op: 'AND' | 'OR' | 'INIT',
-  condition: ConditionDescObj | Condition,
-}
-
-export type WhereType = {
-  [key: string]: CompareBaseType,
-  [or]?: WhereType,
-}
