@@ -15,8 +15,8 @@ export const Op = {
 export type CompareBaseType = string | number | undefined | null
 
 
-// object => condition 
-// { a: 13 } => 
+// object => condition
+// { a: 13 } =>
 /**
  * A.And().Or()
  */
@@ -47,8 +47,44 @@ export class Condition {
     })
   }
 
+  queryByBaseCondition = (baseDesc: ConditionBaseDesc) => (item: any, index: number) => {
+    const keys = Object.getOwnPropertySymbols(baseDesc)
+    return keys.reduce((pre: boolean, cur: keyof ConditionBaseDesc) => {
+      const ruleValue = baseDesc[cur]
+      if (ruleValue) {
+        switch(cur) {
+          case gt:
+            return pre && item > ruleValue
+          case gte:
+            return pre && item >= ruleValue
+          case lt:
+            return pre && item < ruleValue
+          case lte:
+            return pre && item <= ruleValue
+          case ne:
+            return pre && item !== ruleValue
+          case like:
+            return pre && new RegExp(`${ruleValue}`).test(item)
+          default:
+            return pre && item === ruleValue
+        }
+      }
+      return pre
+    }, true)
+  }
+
   toFilter = (condition: ConditionDescObj) => (item: any, index: number): boolean => {
-    
+    const keys = Object.keys(condition)
+    return keys.reduce((pre, cur) => {
+      const obj = condition[cur]
+      if (obj instanceof Condition) {
+        return pre && obj.filter(item[cur], index)
+      } else if (Object.prototype.toString.call(obj) === '[object Object]') {
+        return pre && this.queryByBaseCondition(obj as ConditionBaseDesc)(item[cur], index)
+      } else {
+        return pre && item[cur] === obj
+      }
+    }, true)
   }
 
   filter(item: any, index: number): boolean {
@@ -76,16 +112,18 @@ export class Condition {
   }
 }
 
+export type ConditionBaseDesc = {
+  [gt]?: CompareBaseType,
+  [lt]?: CompareBaseType,
+  [gte]?: CompareBaseType,
+  [lte]?: CompareBaseType,
+  [like]?: CompareBaseType,
+  [ne]?: CompareBaseType,
+  [eq]?: CompareBaseType,
+}
+
 export type ConditionDescObj = {
-  [key: string]: CompareBaseType | {
-    [gt]?: CompareBaseType,
-    [lt]?: CompareBaseType,
-    [gte]?: CompareBaseType,
-    [lte]?: CompareBaseType,
-    [like]?: CompareBaseType,
-    [ne]?: CompareBaseType,
-    [eq]?: CompareBaseType,
-  },
+  [key: string]: Condition | CompareBaseType | ConditionBaseDesc,
 }
 
 export type ConditionItem = {
@@ -96,16 +134,4 @@ export type ConditionItem = {
 export type WhereType = {
   [key: string]: CompareBaseType,
   [or]?: WhereType,
-}
-
-const filter = (where?: WhereType) =>  {
-  where = where || {}
-  const keys = Object.keys(where) as (string | symbol)[]
-  let filterFunc
-  if (keys.indexOf(or) > -1 && !!where[or]) {
-    filterFunc = filter(where[or])
-  }
-  return (item) =>  {
-    
-  }
 }
