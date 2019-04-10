@@ -47,19 +47,45 @@ export class Condition {
     })
   }
 
-  toFilter() {
+  toFilter = (condition: ConditionDescObj) => (item: any, index: number): boolean => {
+    
+  }
+
+  filter(item: any, index: number): boolean {
+    let result: boolean = true
+    this.conditions.forEach(conditionItem => {
+      const { op, condition } = conditionItem
+      let curResult
+      if (condition instanceof Condition) {
+        curResult = condition.filter(item, index)
+      } else {
+        curResult = this.toFilter(condition)(item, index)
+      }
+      switch(op) {
+        case 'AND':
+          result = result && curResult
+          break;
+        case 'OR':
+          result = result || curResult
+          break;
+        default:
+          result = curResult
+      }
+    })
+    return result
   }
 }
 
 export type ConditionDescObj = {
-  [key: string]: CompareBaseType,
-  [gt]?: CompareBaseType,
-  [lt]?: CompareBaseType,
-  [gte]?: CompareBaseType,
-  [lte]?: CompareBaseType,
-  [like]?: CompareBaseType,
-  [ne]?: CompareBaseType,
-  [eq]?: CompareBaseType,
+  [key: string]: CompareBaseType | {
+    [gt]?: CompareBaseType,
+    [lt]?: CompareBaseType,
+    [gte]?: CompareBaseType,
+    [lte]?: CompareBaseType,
+    [like]?: CompareBaseType,
+    [ne]?: CompareBaseType,
+    [eq]?: CompareBaseType,
+  },
 }
 
 export type ConditionItem = {
