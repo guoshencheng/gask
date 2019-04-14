@@ -1,10 +1,10 @@
 export const DataTypes = {
-  string: 'string',
-  date: 'date',
-  number: 'number',
+  String: 'string',
+  Date: 'date',
+  Number: 'number',
 }
 
-export type PropType = 'string' | 'date' | 'number'
+export type PropType = 'string' | 'date' | 'number' | string
 
 export type ModelConfig = {
   name: string,
@@ -20,9 +20,9 @@ export type ModelConfig = {
 
 const getterForType = (type: string) => {
   switch (type) {
-    case DataTypes.number:
+    case DataTypes.Number:
       return function() { return Number(this.value) }
-    case DataTypes.date:
+    case DataTypes.Date:
       return function() { return new Date(this.value) }
     default:
       return function() { return this.value }
@@ -31,9 +31,9 @@ const getterForType = (type: string) => {
 
 const setterForType = (type: string) => {
   switch (type) {
-    case DataTypes.number:
+    case DataTypes.Number:
       return function(value: number) { this.value = `${value}` }
-    case DataTypes.date:
+    case DataTypes.Date:
       return function(value: Date) { this.value = `${value.getTime()}` }
     default:
       return function(value: any) { this.value = value }
