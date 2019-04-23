@@ -36,7 +36,7 @@ export type ConditionItem = {
 
 export default class Condition {
 
-  conditions: ConditionItem[]
+  conditions: ConditionItem[] = []
 
   constructor(obj: ConditionDescObj) {
     this.conditions.push({
@@ -99,7 +99,7 @@ export default class Condition {
     }, true)
   }
 
-  filter(item: any, index: number): boolean {
+  filter = (item: any, index: number): boolean => {
     let result: boolean = true
     this.conditions.forEach(conditionItem => {
       const { op, condition } = conditionItem
