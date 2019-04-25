@@ -76,7 +76,7 @@ export default class Condition {
           case ne:
             return pre && item !== ruleValue
           case like:
-            return pre && new RegExp(`${ruleValue}`).test(item)
+            return pre && new RegExp(`${ruleValue}`).test(`${item}`)
           default:
             return pre && item === ruleValue
         }
