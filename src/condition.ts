@@ -45,18 +45,20 @@ export default class Condition {
     })
   }
 
-  And(obj: ConditionDescObj | Condition): void {
+  And(obj: ConditionDescObj | Condition): Condition {
     this.conditions.push({
       op: 'AND',
       condition: obj
     })
+    return this
   }
 
-  Or(obj: ConditionDescObj | Condition): void {
+  Or(obj: ConditionDescObj | Condition): Condition {
     this.conditions.push({
       op: 'OR',
       condition: obj
     })
+    return this
   }
 
   queryByBaseCondition = (baseDesc: ConditionBaseDesc) => (item: any, index: number) => {
