@@ -26,6 +26,7 @@ describe('storage feature test', () => {
     expect(result1.success).toBe(true)
     expect(result2.success).toBe(true)
     expect(result3.success).toBe(true)
+    // file must be created
     expect(statSync(storageFile(modelName)).isFile()).toBe(true)
   })
   it('query model', async () => {
@@ -47,6 +48,12 @@ describe('storage feature test', () => {
   it('drop model', async () => {
     const result = await _drop(modelName)
     expect(result.success).toBe(true)
+    // file must be deleted
+    try {
+      statSync(storageFile(modelName)).isFile()
+    } catch (e) {
+      expect(e).not.toBeUndefined()
+    }
   })
 })
 
