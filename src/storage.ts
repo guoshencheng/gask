@@ -24,23 +24,27 @@ const STORATGE_DIR = `${PREFIX_DIR}${sep}storage`
 
 const checkAndFillPath = (path: string) => {
   const parsed = parse(path)
+  const dir = parsed.dir
   try {
-    const stats = statSync(path)
+    const stats = statSync(dir)
     if (stats.isDirectory()) {
       return
     }
   } catch (e) {
-    checkAndFillPath(parsed.dir)
-    /* handle error */
+    checkAndFillPath(dir)
   }
   mkdirSync(path)
 }
 
-const storageFile = (name: string) => `${STORATGE_DIR}${sep}${name.toLowerCase()}.json`
+export const storageFile = (name: string) => `${STORATGE_DIR}${sep}${name.toLowerCase()}.json`
 
 const readStorageFile = (file: string): any[] => {
-  const content = readFileSync(file, 'utf8')
-  return JSON.parse(content)
+  try {
+    const content = readFileSync(file, 'utf8')
+    return JSON.parse(content)
+  } catch (e) {
+    return []
+  }
 }
 
 const writeStorageFile = (file: string, data: any[]) => {
