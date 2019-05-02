@@ -6,13 +6,14 @@ export const like: unique symbol = Symbol('like')
 export const ne: unique symbol = Symbol('ne')
 export const eq: unique symbol = Symbol('eq')
 export const or: unique symbol = Symbol('or')
+export const _in: unique symbol = Symbol('in')
 
 
 export const Op = {
-  gt, lt, gte, lte, like, ne, eq, or,
+  gt, lt, gte, lte, like, ne, eq, or, in: _in,
 }
 
-export type CompareBaseType = string | number | undefined | null
+export type CompareBaseType = string | number | any[] | undefined | null
 
 export type ConditionBaseDesc = {
   [gt]?: CompareBaseType,
@@ -22,6 +23,7 @@ export type ConditionBaseDesc = {
   [like]?: CompareBaseType,
   [ne]?: CompareBaseType,
   [eq]?: CompareBaseType,
+  [_in]?: CompareBaseType,
 }
 
 export type ConditionDescObj = {
@@ -79,6 +81,8 @@ export default class Condition {
             return pre && item !== ruleValue
           case like:
             return pre && new RegExp(`${ruleValue}`).test(`${item}`)
+          case _in:
+            return pre && (ruleValue as any[]).indexOf(item) > -1
           default:
             return pre && item === ruleValue
         }

@@ -20,6 +20,16 @@ describe('condition to filter', () => {
     const result = data.filter(condition.filter)
     expect(result).toEqual(data.filter(i => i.a > 22))
   })
+  it('condition to filter Op.in', () => {
+    const conditionObj = {
+      a: {
+        [Op.in]: [21, 22]
+      },
+    }
+    const condition = new Condition(conditionObj)
+    const result = data.filter(condition.filter)
+    expect(result).toEqual(data.filter(i => [21, 22].indexOf(i.a) > -1))
+  })
   it('condition to filter Op.eq', () => {
     const conditionObj = {
       a: {
