@@ -76,17 +76,19 @@ export const _drop = (name: string): Promise<StorageResult> => {
   })
 }
 
-export const create = async (name: string, obj: any): Promise<StorageResult> => {
+export const batchCreate = async (name: string, objs: any[]): Promise<StorageResult> => {
   const file = storageFile(name)
   checkAndFillPath(file)
-  const objs = readStorageFile(file) || []
+  const list = readStorageFile(file) || []
   return new Promise((resolve, reject) => {
     try {
-      writeStorageFile(file, objs.concat({
+      const next = objs.map(obj => ({
         ...obj,
         _id: generate(),
       }))
+      writeStorageFile(file, list.concat(next))
       resolve({
+        result: next,
         success: true,
       })
     } catch (e) {
@@ -98,7 +100,31 @@ export const create = async (name: string, obj: any): Promise<StorageResult> => 
   })
 }
 
-export const query = (name: string, condition: ConditionDescObj | Condition): Promise<StorageResult> => {
+export const create = async (name: string, obj: any): Promise<StorageResult> => {
+  const file = storageFile(name)
+  checkAndFillPath(file)
+  const objs = readStorageFile(file) || []
+  return new Promise((resolve, reject) => {
+    try {
+      const next = {
+        ...obj,
+        _id: generate(),
+      }
+      writeStorageFile(file, objs.concat(next))
+      resolve({
+        result: next,
+        success: true,
+      })
+    } catch (e) {
+      resolve({
+        success: false,
+        error: e
+      })
+    }
+  })
+}
+
+export const query = (name: string, condition?: ConditionDescObj | Condition): Promise<StorageResult> => {
   const file = storageFile(name)
   checkAndFillPath(file)
   return new Promise((resolve) => {
@@ -108,7 +134,7 @@ export const query = (name: string, condition: ConditionDescObj | Condition): Pr
       if (condition instanceof Condition) {
         result = contents.filter(condition.filter)
       } else {
-        result = contents.filter(new Condition(condition).filter)
+        result = contents.filter(new Condition(condition || {}).filter)
       }
       resolve({
         success: true,

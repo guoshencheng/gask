@@ -1,4 +1,4 @@
-import { create, query, update, _drop, storageFile } from '../src/storage'
+import { create, query, update, _drop, storageFile, batchCreate } from '../src/storage'
 import { statSync } from 'fs'
 
 describe('storage feature test', () => {
@@ -29,6 +29,18 @@ describe('storage feature test', () => {
     // file must be created
     expect(statSync(storageFile(modelName)).isFile()).toBe(true)
   })
+  
+  it('batch create model to local file', async () =>  {
+    await _drop(modelName)
+    const data = [guoshencheng, bob, jerry]
+    const result = await batchCreate(modelName, data)
+    expect(result.success).toBe(true)
+    const models = result.result;
+    expect(models.length).toEqual(data.length)
+    models.map((model: any) => expect(model._id).not.toBeUndefined())
+    expect(statSync(storageFile(modelName)).isFile()).toBe(true)
+  })
+
   it('query model', async () => {
     const result = await query(modelName, {
       name: 'guoshencheng',
