@@ -6,7 +6,6 @@
  *    |_ model_name.json
  *    |_ model_name.json
  */
-import { homedir } from 'os';
 import { sep, parse } from 'path';
 import {
   statSync,
@@ -19,10 +18,11 @@ import { generate } from 'shortid'
 
 import Condition, { ConditionDescObj } from './condition'
 
-const PREFIX_DIR = `${homedir()}${sep}.gask`
-const STORATGE_DIR = `${PREFIX_DIR}${sep}storage`
+import {
+  STORATGE_DIR,
+} from './paths'
 
-const checkAndFillPath = (path: string) => {
+export const checkAndFillPath = (path: string) => {
   const parsed = parse(path)
   const dir = parsed.dir
   try {
