@@ -4,5 +4,5 @@ module.exports = (db: Sequelize) => {
   db.define('Task', {
     name: sequelize.STRING,
     group: sequelize.STRING,
-  })
+  }, )
 }
