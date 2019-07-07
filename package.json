@@ -17,7 +17,9 @@
   "dependencies": {
     "mkdirp": "^0.5.1",
     "moment": "^2.22.2",
-    "shortid": "^2.2.13"
+    "sequelize": "^5.9.4",
+    "shortid": "^2.2.13",
+    "sqlite3": "^4.0.9"
   },
   "devDependencies": {
     "@types/blessed": "^0.1.10",
