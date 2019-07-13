@@ -1,8 +1,9 @@
-import sequelize, { Sequelize } from 'sequelize'
+import { Sequelize, DataTypes } from 'sequelize'
 
 module.exports = (db: Sequelize) => {
-  db.define('Task', {
-    name: sequelize.STRING,
-    group: sequelize.STRING,
-  }, )
+  const Task = db.define('Task', {
+    name: DataTypes.STRING,
+    group: DataTypes.STRING,
+  })
+  return Task
 }

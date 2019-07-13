@@ -1,10 +1,11 @@
-import sequelize, { Sequelize } from 'sequelize'
+import { Sequelize, DataTypes } from 'sequelize'
 
-module.exports = (db: Sequelize) => {
-  db.define('User', {
-    name: sequelize.STRING,
-    email: sequelize.STRING,
-    token: sequelize.STRING,
-    password: sequelize.STRING,
+module.exports = (db: Sequelize ) => {
+  const User = db.define('User', {
+    name: DataTypes.STRING,
+    email: DataTypes.STRING,
+    token: DataTypes.STRING,
+    password: DataTypes.STRING,
   })
+  return User
 }

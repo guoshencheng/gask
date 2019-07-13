@@ -1,8 +1,6 @@
-const Sequelize = require('sequelize');
+import { Op } from 'sequelize'
 
-const Op = Sequelize.Op;
-
-module.exports = {
+export default {
   $eq: Op.eq,
   $ne: Op.ne,
   $gte: Op.gte,

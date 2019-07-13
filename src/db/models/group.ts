@@ -1,9 +1,10 @@
-import sequelize, { Sequelize } from 'sequelize'
+import { Sequelize, DataTypes } from 'sequelize'
 
 module.exports = (db: Sequelize) => {
-  db.define('Group', {
-    name: sequelize.STRING,
+  const Group = db.define('Group', {
+    name: DataTypes.STRING,
   })
+  return Group
 }
 
 
