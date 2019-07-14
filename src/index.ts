@@ -1,10 +1,33 @@
 import DataBase from './db'
+import { Model } from 'sequelize'
 
-const instance = DataBase.instance()
+const { Group, Task } = DataBase.instance().models
 
+export class Gask {
+  async createGroup({
+    name,
+  }: {
+    name: string,
+  }): Promise<Model> {
+    const result = await Group.create({
+      name,
+    })
+    return result
+  }
 
-const User = instance.models.User 
-User.sync().then(() => {
-  console.log(1212)
-})
-console.log(instance.models)
+  remoteGroup(id: string): Promise<any> {
+    const result = 
+  }
+
+  renameGroup() {
+  }
+
+  createTask() {
+  }
+
+  doingTask() {
+  }
+
+  achiveTask() {
+  }
+}
