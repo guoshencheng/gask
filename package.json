@@ -33,6 +33,7 @@
     "@types/node": "^11.13.0",
     "@types/shortid": "^0.0.29",
     "jest": "^23.6.0",
-    "ts-jest": "^23.10.4"
+    "ts-jest": "^23.10.4",
+    "tslint-eslint-rules": "^5.4.0"
   }
 }

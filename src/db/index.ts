@@ -1,4 +1,4 @@
-import { Sequelize, Model } from 'sequelize'
+import { Sequelize } from 'sequelize'
 import { resolve, dirname } from 'path'
 import { readdirSync } from 'fs'
 import * as mkdirp from 'mkdirp'
@@ -6,11 +6,15 @@ import * as mkdirp from 'mkdirp'
 import { SQLITE_FILE } from '../paths'
 import operatorsAliases from './operatorsAlisases'
 
+import Group from './models/group'
+import Task from './models/task'
+import User from './models/user'
+
 export default class DataBase {
   sequelize: Sequelize
-  models: {
-    [key: string]: typeof Model,
-  } = {}
+  models = {
+    Group, Task, User,
+  }
 
   static Sequelize = Sequelize
 
@@ -47,8 +51,8 @@ export default class DataBase {
         && (file !== 'index.js') && (file.slice(-3) === '.ts')
       )
     ).forEach((file) => {
-      const model = this.sequelize.import(`./models/${file}`);
-      this.models[model.name] = model
+      const { init } = require(resolve(__dirname, `./models/${file}`))
+      init(this.sequelize)
     });
   }
 }
