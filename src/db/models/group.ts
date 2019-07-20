@@ -16,6 +16,7 @@ export const init = (sequelize: Sequelize) => {
     },
     name: DataTypes.STRING(500),
   }, {
+    tableName: 'groups',
     sequelize,
   })
 }

@@ -1,9 +1,18 @@
 import { Model, Sequelize, DataTypes } from 'sequelize'
+import * as shortId from 'shortid'
+
+export type TaskDTO = {
+  id: string,
+  name: string,
+  status: string,
+  createdAt: Date,
+  updatedAt: Date,
+}
 
 export default class Task extends Model {
-  id!: number
+  id: string;
   name: string;
-  status: number;
+  status: string;
   readonly createdAt!: Date;
   readonly updatedAt!: Date;
 }
@@ -11,13 +20,14 @@ export default class Task extends Model {
 export const init = (sequelize: Sequelize) => {
   Task.init({
     id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
+      type: DataTypes.STRING(50),
       primaryKey: true,
+      defaultValue: shortId.generate,
     },
     name: DataTypes.STRING(500),
     status: DataTypes.INTEGER,
   }, {
+    tableName: 'tasks',
     sequelize,
   })
 }

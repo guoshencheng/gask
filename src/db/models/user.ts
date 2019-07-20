@@ -14,6 +14,7 @@ export const init = (sequelize: Sequelize) => {
     email: DataTypes.STRING(50),
     token: DataTypes.STRING(30)
   }, {
+    tableName: 'users',
     sequelize,
   })
 }

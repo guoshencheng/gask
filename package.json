@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "@types/blessed": "^0.1.10",
+    "@types/bluebird": "^3.5.27",
     "@types/commander": "^2.12.2",
     "@types/inquirer": "^0.0.43",
     "@types/jest": "^23.3.4",
@@ -32,6 +33,7 @@
     "@types/moment": "^2.13.0",
     "@types/node": "^11.13.0",
     "@types/shortid": "^0.0.29",
+    "@types/validator": "^10.11.1",
     "jest": "^23.6.0",
     "ts-jest": "^23.10.4",
     "tslint-eslint-rules": "^5.4.0"

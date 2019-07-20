@@ -29,6 +29,9 @@ export default class DataBase {
 
   constructor() {
     mkdirp.sync(dirname(SQLITE_FILE))
+  }
+
+  async connect() {
     this.sequelize = new Sequelize({
       dialect: 'sqlite',
       storage: SQLITE_FILE,
@@ -54,6 +57,7 @@ export default class DataBase {
       const { init } = require(resolve(__dirname, `./models/${file}`))
       init(this.sequelize)
     });
+    await this.sequelize.sync()
   }
 }
 
